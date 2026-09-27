@@ -1,0 +1,16 @@
+Return-Path: <bounce@mailer-xyz.top>
+Authentication-Results: mx.example.com; spf=fail smtp.mailfrom=mailer-xyz.top; dkim=none; dmarc=fail
+From: "PayPal Service" <security@paypal-account-verify.top>
+Reply-To: <help@secure-refund-desk.top>
+To: victim@example.com
+Subject: Urgent: Your account has been suspended - verify immediately
+Date: Mon, 22 Sep 2026 09:14:00 +0000
+Content-Type: text/html; charset=utf-8
+
+<html><body>
+<p>Dear Customer,</p>
+<p>We detected unusual activity. Your account has been suspended.
+You must verify your account within 24 hours or it will be permanently closed.</p>
+<p><a href="http://185.203.116.44/paypal/login.php">https://www.paypal.com/signin</a></p>
+<p>Please act now to restore access. Update your payment information.</p>
+</body></html>
