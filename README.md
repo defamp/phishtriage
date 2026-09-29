@@ -14,6 +14,9 @@ Phishing triage is one of the most common — and most repetitive — SOC L1 tas
 - **Authentication** — parses `Authentication-Results` for **SPF / DKIM / DMARC** pass/fail.
 - **URL analysis** — raw-IP links, link-text vs destination mismatch, URL shorteners, punycode/homograph domains, suspicious TLDs.
 - **Attachment analysis** — executables, macro-enabled Office docs, HTML attachments, archives, double extensions.
+  Zip attachments (up to 25 MB) are looked into without extracting anything — only the file listing is read, so
+  zip bombs are harmless — and flag executables, macro docs, password protection, zip-slip paths and nested
+  archives inside. RAR/7z can't be read with the standard library and only get the generic archive note.
 - **Content analysis** — urgency / credential-harvesting language, generic greetings.
 - **Weighted risk score → verdict** — `LOW / MEDIUM / HIGH / CRITICAL`, with every point explained.
 - **Outputs** — rich console, JSON (for SOAR/mail-gateway automation), and a standalone HTML report.

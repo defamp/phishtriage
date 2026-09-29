@@ -31,20 +31,24 @@ class URLCheck(BaseCheck):
             if is_ip_host(url) and not flagged_ip:
                 findings.append(Finding(self.name, "Link uses a raw IP address", Weight.HIGH,
                                         detail="Legitimate brands rarely link to bare IPs.",
-                                        evidence=[url])); flagged_ip = True
+                                        evidence=[url]))
+                flagged_ip = True
             if "xn--" in host and not flagged_puny:
                 findings.append(Finding(self.name, "Punycode / homograph domain", Weight.HIGH,
                                         detail="Punycode (xn--) can spoof a real domain.",
-                                        evidence=[url])); flagged_puny = True
+                                        evidence=[url]))
+                flagged_puny = True
             if registered_domain(host) in _SHORTENERS and not flagged_short:
                 findings.append(Finding(self.name, "URL shortener used", Weight.MEDIUM,
                                         detail="Shorteners hide the true destination.",
-                                        evidence=[url])); flagged_short = True
+                                        evidence=[url]))
+                flagged_short = True
             tld = host.rsplit(".", 1)[-1]
             if tld in _SUSPICIOUS_TLDS and not flagged_tld:
                 findings.append(Finding(self.name, f"Suspicious TLD .{tld}", Weight.LOW,
                                         detail="This TLD is frequently abused for phishing.",
-                                        evidence=[url])); flagged_tld = True
+                                        evidence=[url]))
+                flagged_tld = True
 
         # Anchor text vs href mismatch (classic phishing tell).
         for href, text in _ANCHOR_RE.findall(email.html_body):

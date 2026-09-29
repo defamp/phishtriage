@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import List, Sequence
+from typing import Sequence
 
 from .checks import default_checks
 from .checks.base import BaseCheck

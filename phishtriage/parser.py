@@ -11,6 +11,10 @@ from typing import List, Optional, Tuple
 
 from .models import EmailMeta
 
+# Zip attachments up to this size are kept for a (listing-only) look inside.
+MAX_ARCHIVE_BYTES = 25 * 1024 * 1024
+_ZIP_TYPES = {"application/zip", "application/x-zip-compressed", "application/x-zip"}
+
 
 @dataclass
 class ParsedEmail:
@@ -19,6 +23,7 @@ class ParsedEmail:
     text_body: str = ""
     html_body: str = ""
     attachments: List[Tuple[str, str]] = field(default_factory=list)  # (filename, content_type)
+    archives: List[Tuple[str, bytes]] = field(default_factory=list)  # (filename, zip bytes)
 
     @property
     def all_headers(self):
@@ -53,6 +58,7 @@ def load_email(data: bytes, source: str = "<stdin>") -> ParsedEmail:
 
     text_body, html_body = "", ""
     attachments: List[Tuple[str, str]] = []
+    archives: List[Tuple[str, bytes]] = []
 
     for part in msg.walk():
         if part.is_multipart():
@@ -61,7 +67,15 @@ def load_email(data: bytes, source: str = "<stdin>") -> ParsedEmail:
         ctype = part.get_content_type()
         filename = part.get_filename()
         if disp == "attachment" or filename:
-            attachments.append((filename or "(unnamed)", ctype))
+            name = filename or "(unnamed)"
+            attachments.append((name, ctype))
+            if ctype in _ZIP_TYPES or name.lower().endswith(".zip"):
+                try:
+                    raw = part.get_payload(decode=True)
+                except Exception:
+                    raw = None
+                if isinstance(raw, bytes) and 0 < len(raw) <= MAX_ARCHIVE_BYTES:
+                    archives.append((name, raw))
             continue
         try:
             payload = part.get_content()
@@ -80,6 +94,7 @@ def load_email(data: bytes, source: str = "<stdin>") -> ParsedEmail:
         text_body=text_body,
         html_body=html_body,
         attachments=attachments,
+        archives=archives,
     )
 
 
