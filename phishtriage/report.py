@@ -5,7 +5,6 @@ from __future__ import annotations
 import html
 import json
 from datetime import datetime
-from typing import List
 
 from rich.console import Console
 from rich.panel import Panel

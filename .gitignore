@@ -9,3 +9,4 @@ venv/
 .mypy_cache/
 *.local.html
 report_*.json
+.coverage
